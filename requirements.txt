@@ -1,0 +1,2 @@
+streamlit  # 👑 Para crear la interfaz web
+specklepy  # 🔹 Para conectarse con Speckle
