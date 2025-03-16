@@ -195,6 +195,7 @@ def main():
     st.write("Selecciona un tipo de joyería:")
     col1, col2, col3 = st.columns(3)
 
+    # Botones de selección
     if col1.button("Anillo"):
         st.session_state.seleccion = "Anillo"
     if col2.button("Dije"):
@@ -202,14 +203,13 @@ def main():
     if col3.button("Collar"):
         st.session_state.seleccion = "Collar"
 
-    # Si hubo un cambio de selección, enviar datos y esperar
+    # Si la selección cambia, enviar datos a Speckle
     if "seleccion_actualizada" not in st.session_state or st.session_state.seleccion_actualizada != st.session_state.seleccion:
         st.session_state.seleccion_actualizada = st.session_state.seleccion
-        with st.spinner(f"Enviando '{st.session_state.seleccion}' al modelo... Esperando actualización..."):
+        with st.spinner(f"Enviando '{st.session_state.seleccion}' al modelo..."):
             try:
                 send_text_to_speckle(st.session_state.seleccion, client, wrapper)
-                time.sleep(10)  # Esperar 10 segundos antes de actualizar
-                st.rerun()  # Recargar la página para actualizar el visualizador
+                st.success("Selección enviada correctamente.")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
