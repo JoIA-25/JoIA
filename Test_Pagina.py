@@ -81,7 +81,8 @@ def load_css():
 # Cargar estilos
 load_css()
 # Insertar logo
-st.image("logo.jpeg", use_container_width=False)
+st.image("https://raw.githubusercontent.com/JoIA-25/JoIA/3bb4a51bc82be2d2b46b61d5322ff1c4a3fe90b8/logo.jpeg", use_container_width=False)
+
 # --------------------------
 # Funciones Speckle
 # --------------------------
