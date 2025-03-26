@@ -94,13 +94,27 @@ image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
 st.markdown(
     f"""
     <div class="svg-container">
-        <img src="{image_url}" alt="Logo JoIA" id="logo">
-        <p class="custom-text">JoIA | Belén Reyes</p>
-        <p class="custom-text-small">J E W E L L E R Y</p>
+        <img src="{image_url}" alt="Logo JoIA" id="logo" style="display: none;">
+        <p class="custom-text" id="title-text" style="display: none;">JoIA | Belén Reyes</p>
+        <p class="custom-text-small" id="subtitle-text" style="display: none;">J E W E L L E R Y</p>
     </div>
+
+    <script>
+        // Mostrar la imagen después de 2 segundos
+        setTimeout(() => {{
+            document.getElementById("logo").style.display = "block";
+        }}, 2000);
+
+        // Mostrar los textos después de 3 segundos (1 seg después de la imagen)
+        setTimeout(() => {{
+            document.getElementById("title-text").style.display = "block";
+            document.getElementById("subtitle-text").style.display = "block";
+        }}, 3000);
+    </script>
     """,
     unsafe_allow_html=True
 )
+
 
 # --------------------------
 # Funciones Speckle
