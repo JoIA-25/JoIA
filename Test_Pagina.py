@@ -158,7 +158,7 @@ def generate_iframe(model_url: str) -> str:
 # Lógica principal
 # --------------------------
 def main():
-    time.sleep(2)
+    time.sleep(3)
     show_logo_and_text()
     wrapper = StreamWrapper(MODEL_URL)
     client = initialize_speckle_client()
