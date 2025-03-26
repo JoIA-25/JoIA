@@ -13,75 +13,59 @@ st.set_page_config(page_title='JoIA | Belén Reyes', page_icon='💎')
 def load_css():
     css = """
     <style>
+        @font-face {
+            font-family: 'BilkoOpti';
+            src: url('https://joia-25.github.io/JoIA/partials/BilkoOpti-Regular.otf') format('opentype');
+        }
+
         /* ===== FONDO PRINCIPAL ===== */
         html, body, .stApp {
             background-color: #2E3F6A !important;
         }
-        
-        /* ===== LOGO ===== */
-        [data-testid="stImage"] {
-            position: fixed !important;
-            top: 50px !important;
-            left: 0px !important;
-            width: 150px !important;
-            height: auto !important;
-            z-index: 1000 !important;
+
+        /* ===== CONTENEDOR DEL LOGO ===== */
+        .svg-container {
+            position: relative;  /* Necesario para posicionar el texto sobre la imagen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
         }
 
-        /* Asegurar que el logo no sea afectado por otros contenedores */
-        [data-testid="stImageContainer"] {
-            width: 150px !important;
-            height: auto !important;
+        .svg-container embed {
+            width: 40%;
+            max-width: 600px;
+            height: auto;
         }
 
-        /* Ocultar bordes o sombras que Streamlit añade */
-        [data-testid="stImage"] img {
-            border: none !important;
-            box-shadow: none !important;
+        /* ===== TEXTO SUPERPUESTO ===== */
+        .custom-text {
+            position: absolute;  /* Coloca el texto sobre la imagen */
+            top: 150px;
+            font-family: 'BilkoOpti', sans-serif !important;
+            font-size: 44px !important;
+            color: white !important;
+            text-align: center !important;
+            line-height: 1.1 !important;
+            z-index: 10;  /* Asegura que el texto esté por encima del SVG */
         }
-        /* ===== BOTONES CENTRADOS ===== */
-        /* Contenedor principal de columnas */
-        [data-testid="stHorizontalBlock"] {
-            gap: 0.5rem !important;  /* Ajusta espacio entre columnas */
-        }
-        
-        /* Cada columna individual */
-        [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            padding: 0 5px !important;  /* Padding horizontal reducido */
-        }
-        
-        /* Contenedor del botón (div.stButton) */
-        [data-testid="stHorizontalBlock"] [data-testid="stButton"] {
-            width: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-        }
-        
-        /* El botón en sí */
-        [data-testid="stBaseButton-secondary"] {
-            width: auto !important;
-            min-width: 120px !important;
-            margin: 0 auto !important;
-            transition: all 0.3s ease !important;  /* Efecto hover suave */
-        }
-        
-        /* Efecto hover para mejor UX */
-        [data-testid="stBaseButton-secondary"]:hover {
-            transform: scale(1.05);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-                
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
 
-# Cargar estilos
 load_css()
-# Insertar logo
-st.image("https://joia-25.github.io/JoIA/partials/belen_animated_output.svg", use_container_width=False)
+
+image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
+
+st.markdown(
+    f"""
+    <div class="svg-container">
+        <embed src="{image_url}" type="image/svg+xml">
+        <p class="custom-text">JoIA | Belén Reyes</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # --------------------------
 # Funciones Speckle
@@ -178,8 +162,6 @@ def generate_iframe(model_url: str) -> str:
     }};
     </script>
     """.format(model_url=model_url)
-
-
 # --------------------------
 # Lógica principal
 # --------------------------
@@ -190,12 +172,11 @@ def main():
     # Estado inicial con selección por defecto
     if "seleccion" not in st.session_state:
         st.session_state.seleccion = "Anillo"
-    
+   
     # Mostrar selección de joyería
     st.write("Selecciona un tipo de joyería:")
     col1, col2, col3 = st.columns(3)
 
-    # Botones de selección
     if col1.button("Anillo"):
         st.session_state.seleccion = "Anillo"
     if col2.button("Dije"):
@@ -203,13 +184,14 @@ def main():
     if col3.button("Collar"):
         st.session_state.seleccion = "Collar"
 
-    # Si la selección cambia, enviar datos a Speckle
+    # Si hubo un cambio de selección, enviar datos y esperar
     if "seleccion_actualizada" not in st.session_state or st.session_state.seleccion_actualizada != st.session_state.seleccion:
         st.session_state.seleccion_actualizada = st.session_state.seleccion
-        with st.spinner(f"Enviando '{st.session_state.seleccion}' al modelo..."):
+        with st.spinner(f"Enviando '{st.session_state.seleccion}' al modelo... Esperando actualización..."):
             try:
                 send_text_to_speckle(st.session_state.seleccion, client, wrapper)
-                st.success("Selección enviada correctamente.")
+                time.sleep(10)  # Esperar 10 segundos antes de actualizar
+                st.rerun()  # Recargar la página para actualizar el visualizador
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
