@@ -13,9 +13,34 @@
             height: 100vh;
             margin: 0;
         }
+
+        img {
+            transition: opacity 0.5s ease-in-out; /* Suaviza el cambio */
+        }
     </style>
 </head>
 <body>
-    <img src="https://joia-25.github.io/JoIA/partials/belen_animated_output.svg">
+    <img id="imagen" src="https://joia-25.github.io/JoIA/partials/belen_animated_output.svg" width="400">
+
+    <script>
+        function reincrustarImagen() {
+            let img = document.getElementById("imagen");
+            let src = img.src.split("?")[0]; // Remueve cualquier query string anterior
+
+            // Crear una nueva imagen temporal
+            let nuevaImagen = new Image();
+            nuevaImagen.src = src + "?t=" + new Date().getTime(); // Añade timestamp para evitar caché
+
+            // Cuando la nueva imagen esté cargada, reemplaza la actual sin parpadeo
+            nuevaImagen.onload = function() {
+                img.style.opacity = 0; // Hace la imagen actual transparente
+                setTimeout(() => {
+                    img.src = nuevaImagen.src; // Reemplaza la imagen
+                    img.style.opacity = 1; // La vuelve a mostrar suavemente
+                }, 200); // Pequeña pausa para una transición más fluida
+            };
+        }
+        setInterval(reincrustarImagen, 3800); // Reinserta cada 4 segundos
+    </script>
 </body>
 </html>
