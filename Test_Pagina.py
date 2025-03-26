@@ -13,9 +13,16 @@ st.set_page_config(page_title='JoIA | Belén Reyes', page_icon='💎')
 def load_css():
     css = """
     <style>
+        /* Cargar la fuente BilkoOpti para JoIA y Belén */
         @font-face {
             font-family: 'BilkoOpti';
             src: url('https://joia-25.github.io/JoIA/partials/BilkoOpti-Regular.otf') format('opentype');
+        }
+
+        /* Cargar la fuente Punkto-Regular para Jewellery */
+        @font-face {
+            font-family: 'Punkto-Regular';
+            src: url('https://joia-25.github.io/JoIA/partials/Punkto-Regular.otf') format('opentype');
         }
 
         /* ===== FONDO PRINCIPAL ===== */
@@ -25,29 +32,54 @@ def load_css():
 
         /* ===== CONTENEDOR DEL LOGO ===== */
         .svg-container {
-            position: relative;  /* Necesario para posicionar el texto sobre la imagen */
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
+            animation: moveLogo 3s forwards;
+            animation-delay: 3s; /* Retrasa la animación por 3 segundos */
         }
 
+        /* Animación de desplazamiento con un valor dinámico */
+        @keyframes moveLogo {
+            0% {
+                transform: translateX(0); /* Estado inicial */
+            }
+            100% {
+                transform: translateX(-35%); /* Mueve el logo hacia la izquierda en función del ancho */
+            }
+        }
+
+        /* ===== Ajuste dinámico del tamaño del logo ===== */
         .svg-container embed {
-            width: 40%;
-            max-width: 600px;
+            width: 25vw; /* El ancho del logo será el 30% del ancho de la ventana */
+            max-width: 250px; /* Limita el tamaño máximo del logo */
             height: auto;
         }
 
-        /* ===== TEXTO SUPERPUESTO ===== */
+        /* ===== TEXTO SUPERPUESTO (JoIA | Belén Reyes) ===== */
         .custom-text {
-            position: absolute;  /* Coloca el texto sobre la imagen */
-            top: 150px;
+            position: absolute;
+            top: 20vh; /* Desplazado un 25% de la altura de la ventana */
             font-family: 'BilkoOpti', sans-serif !important;
-            font-size: 44px !important;
+            font-size: 3vw !important;
             color: white !important;
             text-align: center !important;
             line-height: 1.1 !important;
-            z-index: 10;  /* Asegura que el texto esté por encima del SVG */
+            z-index: 10;
+        }
+
+        /* ===== TEXTO ADICIONAL (JEWELLERY) ===== */
+        .custom-text-small {
+            position: absolute;
+            top: 25vh; /* Desplazado un 20% de la altura de la ventana */
+            font-family: 'Punkto-Regular', sans-serif !important;
+            font-size: 2vw !important;
+            color: white !important;
+            text-align: center !important;
+            letter-spacing: 2px;
+            z-index: 10;
         }
     </style>
     """
@@ -57,11 +89,13 @@ load_css()
 
 image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
 
+# Mostrar el logo y el texto inicial
 st.markdown(
     f"""
     <div class="svg-container">
         <embed src="{image_url}" type="image/svg+xml">
         <p class="custom-text">JoIA | Belén Reyes</p>
+        <p class="custom-text-small">J E W E L L E R Y</p>
     </div>
     """,
     unsafe_allow_html=True
