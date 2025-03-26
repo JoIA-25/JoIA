@@ -90,9 +90,6 @@ load_css()
 image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
 
 # Función para manejar la carga de la imagen y esperar a su carga
-def load_image():
-    time.sleep(1.5)
-    return True  # Retornar True una vez la imagen esté cargada (en un caso real, usar `onload`)
 
 # Función para mostrar el logo y el texto
 def show_logo_and_text():
@@ -164,16 +161,15 @@ def generate_iframe(model_url: str) -> str:
 # Lógica principal
 # --------------------------
 def main():
-    if load_image():  # Asegurarse de que la imagen se ha cargado
-        show_logo_and_text()  # Mostrar logo y texto solo después de la carga de la imagen
-
+    time.sleep(1.5)
+    show_logo_and_text()
     wrapper = StreamWrapper(MODEL_URL)
     client = initialize_speckle_client()
     
     # Estado inicial con selección por defecto
     if "seleccion" not in st.session_state:
         st.session_state.seleccion = "Anillo"
-   
+    time.sleep(5)   
     # Mostrar selección de joyería
     st.write("Selecciona un tipo de joyería:")
     col1, col2, col3 = st.columns(3)
