@@ -90,17 +90,17 @@ load_css()
 image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
 
 # Función para mostrar el logo y el texto
-def show_logo_and_text():
-    st.markdown(
-        f"""
-        <div class="svg-container">
-            <img src="{image_url}" alt="Logo JoIA" id="logo">
-            <p class="custom-text">JoIA | Belén Reyes</p>
-            <p class="custom-text-small">J E W E L L E R Y</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+
+st.markdown(
+    f"""
+    <div class="svg-container">
+        <img src="{image_url}" alt="Logo JoIA" id="logo">
+        <p class="custom-text">JoIA | Belén Reyes</p>
+        <p class="custom-text-small">J E W E L L E R Y</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # --------------------------
 # Funciones Speckle
@@ -158,8 +158,6 @@ def generate_iframe(model_url: str) -> str:
 # Lógica principal
 # --------------------------
 def main():
-    time.sleep(3)
-    show_logo_and_text()
     wrapper = StreamWrapper(MODEL_URL)
     client = initialize_speckle_client()
     
