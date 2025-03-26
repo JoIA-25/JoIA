@@ -13,13 +13,13 @@ st.set_page_config(page_title='JoIA | Belén Reyes', page_icon='💎')
 def load_css():
     css = """
     <style>
-        /* Cargar la fuente BilkoOpti para JoIA y Belén */
+        /* Cargar la fuente BilkoOpti */
         @font-face {
             font-family: 'BilkoOpti';
             src: url('https://joia-25.github.io/JoIA/partials/BilkoOpti-Regular.otf') format('opentype');
         }
 
-        /* Cargar la fuente Punkto-Regular para Jewellery */
+        /* Cargar la fuente Punkto-Regular */
         @font-face {
             font-family: 'Punkto-Regular';
             src: url('https://joia-25.github.io/JoIA/partials/Punkto-Regular.otf') format('opentype');
@@ -32,56 +32,56 @@ def load_css():
 
         /* ===== CONTENEDOR DEL LOGO ===== */
         .svg-container {
+            margin-top: 0 !important;
             position: relative;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
             animation: moveLogo 3s forwards;
-            animation-delay: 3s; /* Retrasa la animación por 3 segundos */
+            animation-delay: 3s;
         }
 
-        /* Animación de desplazamiento con un valor dinámico */
+        /* Animación de desplazamiento */
         @keyframes moveLogo {
-            0% {
-                transform: translateX(0); /* Estado inicial */
-            }
-            100% {
-                transform: translateX(-35%); /* Mueve el logo hacia la izquierda en función del ancho */
-            }
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-50vw + 130px)); }
         }
 
-        /* ===== Ajuste dinámico del tamaño del logo ===== */
-        .svg-container embed {
-            width: 25vw; /* El ancho del logo será el 30% del ancho de la ventana */
-            max-width: 250px; /* Limita el tamaño máximo del logo */
-            height: auto;
+        .svg-container img {
+            position: relative;
+            display: flex;
+            width: 100%;
+            max-width: 150px !important;
+            height: 100%;
+            max-width: 200px; /* Duplicación de max-width */
         }
 
-        /* ===== TEXTO SUPERPUESTO (JoIA | Belén Reyes) ===== */
+        /* ===== TEXTO PRINCIPAL (JoIA | Belén Reyes) ===== */
         .custom-text {
             position: absolute;
-            top: 20vh; /* Desplazado un 25% de la altura de la ventana */
+            bottom: 20%; /* Ajustar desde el inferior del contenedor de la imagen */
             font-family: 'BilkoOpti', sans-serif !important;
-            font-size: 3vw !important;
+            font-size: clamp(1rem, 1vw, 2.5rem) !important;
             color: white !important;
             text-align: center !important;
             line-height: 1.1 !important;
             z-index: 10;
         }
 
-        /* ===== TEXTO ADICIONAL (JEWELLERY) ===== */
+        /* ===== TEXTO SECUNDARIO (JEWELLERY) ===== */
         .custom-text-small {
             position: absolute;
-            top: 25vh; /* Desplazado un 20% de la altura de la ventana */
+            bottom: 5%; /* Ajustar desde el inferior del contenedor de la imagen */
             font-family: 'Punkto-Regular', sans-serif !important;
-            font-size: 2vw !important;
+            font-size: clamp(0.8rem, 0.8vw, 1.8rem) !important;
             color: white !important;
             text-align: center !important;
             letter-spacing: 2px;
             z-index: 10;
         }
-    </style>
+
     """
     st.markdown(css, unsafe_allow_html=True)
 
@@ -93,13 +93,14 @@ image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
 st.markdown(
     f"""
     <div class="svg-container">
-        <embed src="{image_url}" type="image/svg+xml">
+        <img src="{image_url}" alt="Logo JoIA">
         <p class="custom-text">JoIA | Belén Reyes</p>
         <p class="custom-text-small">J E W E L L E R Y</p>
     </div>
     """,
     unsafe_allow_html=True
 )
+
 
 # --------------------------
 # Funciones Speckle
@@ -119,36 +120,7 @@ def initialize_speckle_client() -> SpeckleClient:
     client.authenticate_with_account(account)
     return client
 
-def send_number_to_speckle(
-    numero: int, 
-    client: SpeckleClient, 
-    wrapper: StreamWrapper
-) -> tuple[str, str]:
-    """Envía número a Speckle y retorna object_id y commit_id"""
-    transport = ServerTransport(client=client, stream_id=wrapper.stream_id)
-    
-    data = Base()
-    data["numero"] = numero
-    
-    object_id = operations.send(
-        base=data,
-        transports=[transport],
-        use_default_cache=False
-    )
-    
-    commit_id = client.commit.create(
-        stream_id=wrapper.stream_id,
-        object_id=object_id,
-        branch_name=wrapper.branch_name,
-        message=f"Streamlit -> Número enviado: {numero}"
-    )
-    return object_id, commit_id
-
-def send_text_to_speckle(
-    text: str, 
-    client: SpeckleClient, 
-    wrapper: StreamWrapper
-) -> tuple[str, str]:
+def send_text_to_speckle(text: str, client: SpeckleClient, wrapper: StreamWrapper) -> tuple[str, str]:
     """Envía texto a Speckle y retorna object_id y commit_id"""
     transport = ServerTransport(client=client, stream_id=wrapper.stream_id)
     
@@ -171,7 +143,7 @@ def send_text_to_speckle(
 
 def generate_iframe(model_url: str) -> str:
     """Genera el código HTML del iframe con los parámetros de Speckle Viewer."""
-    return """
+    return f"""
     <div style="position: relative; width: 100%; height: 500px;">
         <iframe 
             id="speckleViewer"
@@ -180,22 +152,8 @@ def generate_iframe(model_url: str) -> str:
             style="width: 100%; height: 100%; border: none;">
         </iframe>
     </div>
+    """
 
-    <script>
-    document.getElementById("speckleViewer").onload = function() {{
-        try {{
-            const iframeDoc = this.contentDocument || this.contentWindow.document;
-            const canvas = iframeDoc.querySelector("canvas");
-            if (canvas) {{
-                canvas.style.backgroundColor = "#2E3F6A";
-                canvas.parentElement.style.backgroundColor = "#2E3F6A";
-            }}
-        }} catch (error) {{
-            console.log("Error de seguridad CORS (esperado):", error);
-        }}
-    }};
-    </script>
-    """.format(model_url=model_url)
 # --------------------------
 # Lógica principal
 # --------------------------
@@ -224,11 +182,10 @@ def main():
         with st.spinner(f"Enviando '{st.session_state.seleccion}' al modelo... Esperando actualización..."):
             try:
                 send_text_to_speckle(st.session_state.seleccion, client, wrapper)
-                time.sleep(10)  # Esperar 10 segundos antes de actualizar
-                st.rerun()  # Recargar la página para actualizar el visualizador
+                time.sleep(10)
+                st.rerun()
             except Exception as e:
                 st.error(f"Error: {str(e)}")
-
     # Mostrar visualizador con la selección actual
     st.components.v1.html(generate_iframe(MODEL_URL_2), height=500)
 if __name__ == "__main__":
