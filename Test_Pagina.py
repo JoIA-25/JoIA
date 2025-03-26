@@ -89,18 +89,24 @@ load_css()
 
 image_url = "https://joia-25.github.io/JoIA/partials/belen_animated_output.svg"
 
-# Mostrar el logo y el texto inicial
-st.markdown(
-    f"""
-    <div class="svg-container">
-        <img src="{image_url}" alt="Logo JoIA">
-        <p class="custom-text">JoIA | Belén Reyes</p>
-        <p class="custom-text-small">J E W E L L E R Y</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# Función para manejar la carga de la imagen y esperar a su carga
+def load_image():
+    time.sleep(1.5)
+    return True  # Retornar True una vez la imagen esté cargada (en un caso real, usar `onload`)
 
+# Función para mostrar el logo y el texto
+def show_logo_and_text():
+    # Mostrar el logo y el texto principal cuando la imagen esté cargada
+    st.markdown(
+        f"""
+        <div class="svg-container">
+            <img src="{image_url}" alt="Logo JoIA" id="logo">
+            <p class="custom-text">JoIA | Belén Reyes</p>
+            <p class="custom-text-small">J E W E L L E R Y</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # --------------------------
 # Funciones Speckle
@@ -158,6 +164,9 @@ def generate_iframe(model_url: str) -> str:
 # Lógica principal
 # --------------------------
 def main():
+    if load_image():  # Asegurarse de que la imagen se ha cargado
+        show_logo_and_text()  # Mostrar logo y texto solo después de la carga de la imagen
+
     wrapper = StreamWrapper(MODEL_URL)
     client = initialize_speckle_client()
     
