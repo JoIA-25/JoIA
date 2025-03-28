@@ -28,8 +28,9 @@ def load_css():
         /* ===== FONDO PRINCIPAL ===== */
         html, body, .stApp {
             background-color: #2E3F6A !important;
+            color: white !important;
         }
-
+        
         /* ===== CONTENEDOR DEL LOGO ===== */
         .svg-container {
             margin-top: 0 !important;
@@ -82,6 +83,47 @@ def load_css():
             z-index: 10;
         }
 
+        /* ===== ESTILO PARA BOTONES ===== */
+        div.stButton > button {
+            background-color: black !important;  /* Fondo negro */
+            color: white !important;  /* Texto blanco */
+            border: 0px;
+            padding: 10px 20px !important;  /* Espaciado interno */
+            font-size: 16px !important;  /* Tamaño de fuente */
+            border-radius: 8px !important;  /* Bordes redondeados */
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* ===== HOVER (Efecto al pasar el mouse) ===== */
+        div.stButton > button:hover {
+            background-color: white !important;  /* Fondo blanco */
+            color: black !important;  /* Texto negro */
+            border: 0px;
+        }
+
+        /* Centrar botones en sus columnas */
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        /* Asegurar que el contenedor del botón ocupe todo el ancho disponible */
+        div[data-testid="stButton"] {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        /* Ajustar el botón en sí para que herede el centrado */
+        button.st-emotion-cache-ocsh0s {
+            margin: 0 auto !important;
+            display: block !important;
+            width: auto !important;  /* Para no estirar el botón */
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+        
     """
     st.markdown(css, unsafe_allow_html=True)
 
