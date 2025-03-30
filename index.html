@@ -33,7 +33,7 @@
             transform: translateX(-50%);
             width: 33.33vw;
             height: 100vh;
-            background-color: rgba(0, 255, 0, 0.2);
+            background-color: rgba(0, 255, 0, 0.0);
             border: 0px;
             animation: 
                 moveContainerHorizontal 2s cubic-bezier(0.25, 0.8, 0.25, 1) 5s forwards;
@@ -109,10 +109,21 @@
             left: 66.66%;
             width: 66.66vw;
             height: 100vh;
-            background-color: rgba(0, 0, 255, 0.2);
+            background-color: rgba(0, 0, 255, 0.0);
             animation: 
                 moveAzul 2s cubic-bezier(0.25, 0.8, 0.25, 1) 5s forwards;
         }
+        .azul iframe {
+            visibility: hidden; /* Inicialmente oculto */
+            opacity: 0; /* Inicialmente invisible */
+            transition: opacity 0.5s ease, visibility 0.5s ease; /* Transición para hacer el iframe visible */
+        }
+        
+        .azul.show-iframe iframe {
+            visibility: visible; /* Mostrar iframe */
+            opacity: 1; /* Hacerlo visible */
+        }
+
 
         @keyframes moveAzul {
             0% {
@@ -403,7 +414,13 @@
             </div>
         </div>
     </div>
-    <div class="azul"></div>
+    <div class="azul">
+        <iframe title="Speckle" 
+                src="https://app.speckle.systems/projects/4fe6b2ee63/models/6151567ec8#embed=%7B%22isEnabled%22%3Atrue%2C%22isTransparent%22%3Atrue%2C%22hideControls%22%3Atrue%7D" 
+                width="100%" 
+                height="100%" 
+                frameborder="0"></iframe>
+    </div>
 
 
     <script>
@@ -464,6 +481,15 @@
         window.addEventListener('load', ajustarTexto);
         window.addEventListener('resize', ajustarTexto);
     </script>
+    <script>
+        window.addEventListener('load', function() {
+            // Después de que la página se haya cargado, haz visible el iframe
+            setTimeout(function() {
+                document.querySelector('.azul').classList.add('show-iframe');
+            }, 8000); // Ajusta el tiempo de espera según cuando quieras mostrarlo
+        });
 
+
+    </script>
 </body>
 </html>
