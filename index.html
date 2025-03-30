@@ -3,44 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVG Centrado</title>
+    <title>JoIA | Belén Reyes</title>
     <style>
-        body {
-            background-color: #0a0a2a; /* Azul oscuro */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+        @font-face {
+            font-family: 'BilkoOpti';
+            src: url('https://joia-25.github.io/JoIA/partials/BilkoOpti-Regular.otf') format('opentype');
         }
 
-        img {
-            transition: opacity 0.5s ease-in-out; /* Suaviza el cambio */
+        @font-face {
+            font-family: 'Punkto-Regular';
+            src: url('https://joia-25.github.io/JoIA/partials/Punkto-Regular.otf') format('opentype');
+        }
+
+        body {
+            background-color: #2E3F6A;
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .svg-container {
+            margin-top: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            animation: moveLogo 3s forwards;
+            animation-delay: 3s;
+        }
+
+        @keyframes moveLogo {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-50vw + 130px)); }
+        }
+
+        .svg-container img {
+            width: 150px;
+            height: auto;
+        }
+
+        .custom-text {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'BilkoOpti', sans-serif;
+            font-size: 1vw; /* Usa vw para una escala proporcional a la anchura de la pantalla */
+            color: white;
+            text-align: center;
+            line-height: 1.1;
+            max-width: 90%; /* Limita el ancho en pantallas grandes */
+        }
+        
+        .custom-text-small {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Punkto-Regular', sans-serif;
+            font-size: 0.8vw; /* Escala según el ancho de la pantalla */
+            color: white;
+            text-align: center;
+            letter-spacing: 1px;
+            max-width: 80%; /* Limita el ancho en pantallas grandes */
+        }
+        
+        /* Media queries para tamaños de pantalla más pequeños */
+        @media (max-width: 768px) {
+            .custom-text {
+                font-size: 3vw; /* Aumenta el tamaño de fuente en pantallas pequeñas */
+                bottom: 15%;
+            }
+        
+            .custom-text-small {
+                font-size: 2vw; /* Aumenta el tamaño de fuente en pantallas pequeñas */
+                bottom: 10%;
+            }
+        }
+        
+        /* Media queries para tamaños de pantalla extra pequeños (móviles) */
+        @media (max-width: 480px) {
+            .custom-text {
+                font-size: 10vw; /* Ajusta aún más en pantallas muy pequeñas */
+                bottom: 10%;
+            }
+        
+            .custom-text-small {
+                font-size: 8vw; /* Ajusta aún más en pantallas muy pequeñas */
+                bottom: 5%;
+            }
+        }
+
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .joya-button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'BilkoOpti', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .joya-button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        #viewer-container {
+            width: 100%;
+            height: 500px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-    <img id="imagen" src="https://joia-25.github.io/JoIA/partials/belen_animated_output.svg" width="400">
+    <div class="svg-container">
+        <img src="https://joia-25.github.io/JoIA/partials/belen_animated_output.svg" alt="Logo JoIA">
+        <p class="custom-text">JoIA | Belén Reyes</p>
+        <p class="custom-text-small">J E W E L L E R Y</p>
+    </div>
+
+    <div class="button-container">
+        <button class="joya-button" onclick="enviarSeleccion('Anillo')">Anillo</button>
+        <button class="joya-button" onclick="enviarSeleccion('Dije')">Dije</button>
+        <button class="joya-button" onclick="enviarSeleccion('Collar')">Collar</button>
+    </div>
+
+    <div id="viewer-container">
+        <iframe 
+            id="speckleViewer"
+            title="Speckle" 
+            src="https://app.speckle.systems/projects/4fe6b2ee63/models/6151567ec8#embed=%7B%22isEnabled%22%3Atrue%2C%22isTransparent%22%3Atrue%2C%22hideControls%22%3Atrue%2C%22hideSelectionInfo%22%3Atrue%2C%22noScroll%22%3Atrue%7D" 
+            style="width: 100%; height: 100%; border: none;">
+        </iframe>
+    </div>
 
     <script>
-        function reincrustarImagen() {
-            let img = document.getElementById("imagen");
-            let src = img.src.split("?")[0]; // Remueve cualquier query string anterior
+        const SPECKLE_SERVER = "https://speckle.xyz/graphql";
+        const TOKEN = "a1af46876375c70f446bb77e6d0092f11447f4dd5e";
+        const STREAM_ID = "4fe6b2ee63";
+        const BRANCH_NAME = "b9eba9b3d4";
 
-            // Crear una nueva imagen temporal
-            let nuevaImagen = new Image();
-            nuevaImagen.src = src + "?t=" + new Date().getTime(); // Añade timestamp para evitar caché
+        async function enviarSeleccion(tipoJoya) {
+            try {
+                // Mostrar feedback al usuario
+                const originalText = event.target.textContent;
+                event.target.textContent = 'Enviando...';
+                event.target.disabled = true;
 
-            // Cuando la nueva imagen esté cargada, reemplaza la actual sin parpadeo
-            nuevaImagen.onload = function() {
-                img.style.opacity = 0; // Hace la imagen actual transparente
-                setTimeout(() => {
-                    img.src = nuevaImagen.src; // Reemplaza la imagen
-                    img.style.opacity = 1; // La vuelve a mostrar suavemente
-                }, 200); // Pequeña pausa para una transición más fluida
-            };
+                // 1. Crear objeto en Speckle
+                const objeto = { 
+                    tipo: tipoJoya,
+                    material: "oro",
+                    fecha: new Date().toISOString()
+                };
+
+                const objectId = await crearObjetoSpeckle(objeto);
+                
+                // 2. Crear commit
+                const commitId = await crearCommitSpeckle(objectId, tipoJoya);
+                
+                // Actualizar interfaz
+                setTimeout(() => location.reload(), 2000); // Recargar para ver cambios
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error al enviar la selección");
+            } finally {
+                event.target.textContent = originalText;
+                event.target.disabled = false;
+            }
         }
-        setInterval(reincrustarImagen, 3500); // Reinserta cada 4 segundos
+
+        async function crearObjetoSpeckle(objeto) {
+            const response = await fetch(SPECKLE_SERVER, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${TOKEN}`
+                },
+                body: JSON.stringify({
+                    query: `mutation ObjectCreate($input: ObjectCreateInput!) {
+                        objectCreate(objectInput: $input)
+                    }`,
+                    variables: {
+                        input: {
+                            streamId: STREAM_ID,
+                            objects: [objeto]
+                        }
+                    }
+                })
+            });
+
+            const data = await response.json();
+            return data.data.objectCreate[0];
+        }
+
+        async function crearCommitSpeckle(objectId, tipoJoya) {
+            const response = await fetch(SPECKLE_SERVER, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${TOKEN}`
+                },
+                body: JSON.stringify({
+                    query: `mutation CommitCreate($input: CommitCreateInput!) {
+                        commitCreate(commit: $input)
+                    }`,
+                    variables: {
+                        input: {
+                            streamId: STREAM_ID,
+                            branchName: BRANCH_NAME,
+                            objectId: objectId,
+                            message: `Selección: ${tipoJoya}`,
+                            sourceApplication: "JoIA Web"
+                        }
+                    }
+                })
+            });
+            const data = await response.json();
+            return data.data.commitCreate;
+        }
     </script>
 </body>
 </html>
