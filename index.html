@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JoIA | Belén Reyes</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            height: 100vh;
+            background-color: #2E3F6A;
+        }
+
         @font-face {
             font-family: 'BilkoOpti';
             src: url('https://joia-25.github.io/JoIA/partials/BilkoOpti-Regular.otf') format('opentype');
@@ -15,226 +27,443 @@
             src: url('https://joia-25.github.io/JoIA/partials/Punkto-Regular.otf') format('opentype');
         }
 
-        body {
-            background-color: #2E3F6A;
-            color: white;
-            margin: 0;
-            overflow-x: hidden;
+        .verde {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 33.33vw;
+            height: 100vh;
+            background-color: rgba(0, 255, 0, 0.2);
+            border: 0px;
+            animation: 
+                moveContainerHorizontal 2s cubic-bezier(0.25, 0.8, 0.25, 1) 5s forwards;
         }
 
-        .svg-container {
-            margin-top: 0;
-            position: relative;
+        .cuadrado-negro {
+            position: absolute;
+            width: 50%;
+            aspect-ratio: 1;
+            background-color: rgba(0, 0, 0, 0.0);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
-            width: 100%;
-            animation: moveLogo 3s forwards;
-            animation-delay: 3s;
+            border: 0px;
+            color: white;
+            position: relative;
+            animation: moveContainer 2s cubic-bezier(0.25, 0.8, 0.25, 1) 3s forwards;
         }
 
-        @keyframes moveLogo {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-50vw + 130px)); }
+        @keyframes moveContainer {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                top: 50%;
+            }
+            100% {
+                transform: translate(-50%, 0) scale(0.55);
+                top: 0;
+            }
         }
 
-        .svg-container img {
-            width: 150px;
-            height: auto;
+        @keyframes moveContainerHorizontal {
+            0% {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            100% {
+                left: 0;
+                transform: translateX(0);
+            }
         }
 
-        .custom-text {
-            position: absolute;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
+        .texto {
             font-family: 'BilkoOpti', sans-serif;
-            font-size: 1vw; /* Usa vw para una escala proporcional a la anchura de la pantalla */
-            color: white;
             text-align: center;
-            line-height: 1.1;
-            max-width: 90%; /* Limita el ancho en pantallas grandes */
+            white-space: nowrap;
+            font-size: 1px;
+            line-height: 1;
+            width: 100%;
         }
-        
-        .custom-text-small {
-            position: absolute;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%);
+
+        .texto-bajo {
             font-family: 'Punkto-Regular', sans-serif;
-            font-size: 0.8vw; /* Escala según el ancho de la pantalla */
+            text-align: center;
+            white-space: nowrap;
+            font-size: 1px;
+            line-height: 1.2;
+            width: 100%;
+            margin-top: 0;
+        }
+
+        .espacio-bajo {
+            width: 100%;
+            height: 10%;
+        }
+
+        .azul {
+            position: absolute;
+            left: 66.66%;
+            width: 66.66vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 255, 0.2);
+            animation: 
+                moveAzul 2s cubic-bezier(0.25, 0.8, 0.25, 1) 5s forwards;
+        }
+
+        @keyframes moveAzul {
+            0% {
+                left: 66.66%;
+            }
+            100% {
+                left: 33.33%;
+            }
+        }
+
+        .logo {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: auto;
+            z-index: -1;
+        }
+
+        .input-texto {
+            position: absolute;
+            width: 80%;
+            left: 10%;
+            top: calc(30%);
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Punkto-Regular', sans-serif;
+            font-size: 18px;
+            opacity: 0;
+            height: 180px;
+            line-height: 1.4;
+            animation: fadeIn 0.5s ease-in 7s forwards;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: #333;
+            overflow-y: auto; /* Scroll vertical cuando se necesita */
+            resize: none;
+        }
+
+        .botones-container {
+            position: absolute;
+            width: 80%;
+            left: 10%;
+            top: calc(55%); /* Debajo del textarea + margen */
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in 7.5s forwards;
+        }
+
+        .selector-joyas {
+            font-family: 'BilkoOpti', sans-serif;
             color: white;
             text-align: center;
-            letter-spacing: 1px;
-            max-width: 80%; /* Limita el ancho en pantallas grandes */
-        }
-        
-        /* Media queries para tamaños de pantalla más pequeños */
-        @media (max-width: 768px) {
-            .custom-text {
-                font-size: 3vw; /* Aumenta el tamaño de fuente en pantallas pequeñas */
-                bottom: 15%;
-            }
-        
-            .custom-text-small {
-                font-size: 2vw; /* Aumenta el tamaño de fuente en pantallas pequeñas */
-                bottom: 10%;
-            }
-        }
-        
-        /* Media queries para tamaños de pantalla extra pequeños (móviles) */
-        @media (max-width: 480px) {
-            .custom-text {
-                font-size: 10vw; /* Ajusta aún más en pantallas muy pequeñas */
-                bottom: 10%;
-            }
-        
-            .custom-text-small {
-                font-size: 8vw; /* Ajusta aún más en pantallas muy pequeñas */
-                bottom: 5%;
-            }
+            margin-bottom: 15px;
+            font-size: 20px;
         }
 
-
-        .button-container {
+        .botones-joyas {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .boton-joya {
+            flex: 1;
+            padding: 12px 0;
+            background: rgba(255, 255, 255, 0.85);
+            border: none;
+            border-radius: 25px;
+            font-family: 'Punkto-Regular', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2E3F6A;
+        }
+
+        .boton-joya:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .botones-acabado {
             margin-top: 30px;
         }
 
-        .joya-button {
-            background-color: black;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+        .botones-acabado-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .boton-acabado {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .boton-acabado:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Estilos específicos de cada acabado */
+        .mate {
+            background: #808080;
+            background-image: linear-gradient(145deg, #707070 0%, #909090 100%);
+        }
+
+        .plata {
+            background: linear-gradient(135deg, 
+                #c0c0c0 0%, 
+                #e8e8e8 50%, 
+                #c0c0c0 100%);
+        }
+
+        .oro {
+            background: linear-gradient(135deg, 
+                #FFD700 0%, 
+                #DAA520 50%, 
+                #FFD700 100%);
+        }
+
+        .mixto {
+            background: 
+                linear-gradient(45deg, 
+                    #808080 45%, 
+                    #c0c0c0 55%),
+                linear-gradient(-45deg, 
+                    #909090 45%, 
+                    #e0e0e0 55%);
+            background-blend-mode: overlay;
+        }
+        /* Nuevos estilos para sliders */
+
+        .sliders-container {
+            position: absolute;
+            width: 100%;
+            height: 140px; /* Altura fija para todos los contenedores */
+            opacity: 0;
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+
+        .sliders-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .slider-group {
+            margin: 15px 0;
+            position: absolute;
+            width: 100%;
+        }
+
+        /* Posicionamiento específico para cada par de sliders */
+        #anillo-sliders .slider-group:nth-child(1) { top: 0; }
+        #anillo-sliders .slider-group:nth-child(2) { top: 60px; }
+
+        #dije-sliders .slider-group:nth-child(1) { top: 0; }
+        #dije-sliders .slider-group:nth-child(2) { top: 60px; }
+
+        #collar-sliders .slider-group:nth-child(1) { top: 0; }
+        #collar-sliders .slider-group:nth-child(2) { top: 60px; }
+
+        .slider-label {
             font-family: 'BilkoOpti', sans-serif;
+            color: white;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #2E3F6A;
+            border: 2px solid white;
+            border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .joya-button:hover {
-            background-color: white;
-            color: black;
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
 
-        #viewer-container {
-            width: 100%;
-            height: 500px;
-            margin-top: 30px;
+        /* Estilo para botón activo */
+        .boton-joya.active {
+            background: rgba(255,255,255,1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
     </style>
 </head>
 <body>
-    <div class="svg-container">
-        <img src="https://joia-25.github.io/JoIA/partials/belen_animated_output.svg" alt="Logo JoIA">
-        <p class="custom-text">JoIA | Belén Reyes</p>
-        <p class="custom-text-small">J E W E L L E R Y</p>
-    </div>
+    <div class="verde">
+        <div class="cuadrado-negro">
+            <div class="texto">
+                JoIA | Belén Reyes
+            </div>
+            <div class="texto-bajo">
+                J E W E L L E R Y
+            </div>
+            <div class="espacio-bajo"></div>
+            <img class="logo" src="https://joia-25.github.io/JoIA/partials/belen_animated_output.svg" alt="Logo JoIA">
+        </div>
+        <textarea class="input-texto" placeholder="Ingresa el texto a analizar para personalizar tu pieza..."></textarea>
+        
+        <!-- Nuevos botones -->
+        <div class="botones-container">
+            <!-- Selector de joyas -->
+            <div class="selector-joyas">Selecciona un tipo de joya</div>
+            <div class="botones-joyas">
+                <button class="boton-joya" data-type="anillo">Anillo</button>
+                <button class="boton-joya" data-type="dije">Dije</button>
+                <button class="boton-joya" data-type="collar">Collar</button>
+            </div>
+            
+            <!-- Acabados -->
+            <div class="botones-acabado">
+                <div class="selector-joyas">Selecciona el acabado</div>
+                <div class="botones-acabado-container">
+                    <div class="boton-acabado mate"></div>
+                    <div class="boton-acabado mixto"></div>
+                    <div class="boton-acabado plata"></div>
+                    <div class="boton-acabado oro"></div>
+                </div>
+            </div>
 
-    <div class="button-container">
-        <button class="joya-button" onclick="enviarSeleccion('Anillo')">Anillo</button>
-        <button class="joya-button" onclick="enviarSeleccion('Dije')">Dije</button>
-        <button class="joya-button" onclick="enviarSeleccion('Collar')">Collar</button>
-    </div>
+            <!-- Sliders condicionales -->
+            <div class="sliders-container" id="anillo-sliders">
+                <div class="slider-group">
+                    <label class="slider-label">Talla</label>
+                    <input type="range" min="1" max="20" value="10" class="slider">
+                </div>
+                <div class="slider-group">
+                    <label class="slider-label">Grosor</label>
+                    <input type="range" min="1" max="10" value="5" class="slider">
+                </div>
+            </div>
 
-    <div id="viewer-container">
-        <iframe 
-            id="speckleViewer"
-            title="Speckle" 
-            src="https://app.speckle.systems/projects/4fe6b2ee63/models/6151567ec8#embed=%7B%22isEnabled%22%3Atrue%2C%22isTransparent%22%3Atrue%2C%22hideControls%22%3Atrue%2C%22hideSelectionInfo%22%3Atrue%2C%22noScroll%22%3Atrue%7D" 
-            style="width: 100%; height: 100%; border: none;">
-        </iframe>
+            <div class="sliders-container" id="dije-sliders">
+                <div class="slider-group">
+                    <label class="slider-label">Tamaño</label>
+                    <input type="range" min="1" max="15" value="8" class="slider">
+                </div>
+                <div class="slider-group">
+                    <label class="slider-label">Grosor</label>
+                    <input type="range" min="1" max="10" value="5" class="slider">
+                </div>
+            </div>
+
+            <div class="sliders-container" id="collar-sliders">
+                <div class="slider-group">
+                    <label class="slider-label">Longitud</label>
+                    <input type="range" min="30" max="70" value="50" class="slider">
+                </div>
+                <div class="slider-group">
+                    <label class="slider-label">Grosor</label>
+                    <input type="range" min="1" max="10" value="5" class="slider">
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="azul"></div>
+
 
     <script>
-        const SPECKLE_SERVER = "https://speckle.xyz/graphql";
-        const TOKEN = "a1af46876375c70f446bb77e6d0092f11447f4dd5e";
-        const STREAM_ID = "4fe6b2ee63";
-        const BRANCH_NAME = "b9eba9b3d4";
+        function ajustarTexto() {
+            var outerWidth = window.outerWidth;
+            var calculatedWidth = outerWidth * 0.166666;
+            var texto = document.querySelector('.texto');
+            var textoBajo = document.querySelector('.texto-bajo');
+            var fontSize = calculatedWidth / 10;
 
-        async function enviarSeleccion(tipoJoya) {
-            try {
-                // Mostrar feedback al usuario
-                const originalText = event.target.textContent;
-                event.target.textContent = 'Enviando...';
-                event.target.disabled = true;
+            texto.style.fontSize = fontSize + 'px';
+            texto.style.width = calculatedWidth + 'px';
+            textoBajo.style.fontSize = fontSize + 'px';
+            textoBajo.style.width = calculatedWidth + 'px';
 
-                // 1. Crear objeto en Speckle
-                const objeto = { 
-                    tipo: tipoJoya,
-                    material: "oro",
-                    fecha: new Date().toISOString()
-                };
-
-                const objectId = await crearObjetoSpeckle(objeto);
-                
-                // 2. Crear commit
-                const commitId = await crearCommitSpeckle(objectId, tipoJoya);
-                
-                // Actualizar interfaz
-                setTimeout(() => location.reload(), 2000); // Recargar para ver cambios
-
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Error al enviar la selección");
-            } finally {
-                event.target.textContent = originalText;
-                event.target.disabled = false;
-            }
+            console.log('Ancho del contenedor negro (16.666% de la ventana): ' + calculatedWidth + 'px');
+            console.log('Tamaño de la fuente ajustado: ' + fontSize + 'px');
         }
 
-        async function crearObjetoSpeckle(objeto) {
-            const response = await fetch(SPECKLE_SERVER, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${TOKEN}`
-                },
-                body: JSON.stringify({
-                    query: `mutation ObjectCreate($input: ObjectCreateInput!) {
-                        objectCreate(objectInput: $input)
-                    }`,
-                    variables: {
-                        input: {
-                            streamId: STREAM_ID,
-                            objects: [objeto]
-                        }
-                    }
-                })
-            });
-
-            const data = await response.json();
-            return data.data.objectCreate[0];
-        }
-
-        async function crearCommitSpeckle(objectId, tipoJoya) {
-            const response = await fetch(SPECKLE_SERVER, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${TOKEN}`
-                },
-                body: JSON.stringify({
-                    query: `mutation CommitCreate($input: CommitCreateInput!) {
-                        commitCreate(commit: $input)
-                    }`,
-                    variables: {
-                        input: {
-                            streamId: STREAM_ID,
-                            branchName: BRANCH_NAME,
-                            objectId: objectId,
-                            message: `Selección: ${tipoJoya}`,
-                            sourceApplication: "JoIA Web"
-                        }
-                    }
-                })
-            });
-            const data = await response.json();
-            return data.data.commitCreate;
-        }
+        window.addEventListener('load', ajustarTexto);
+        window.addEventListener('resize', ajustarTexto);
     </script>
+    <script>
+        // Función existente de ajuste de texto
+        function ajustarTexto() {
+            var outerWidth = window.outerWidth;
+            var calculatedWidth = outerWidth * 0.166666;
+            var texto = document.querySelector('.texto');
+            var textoBajo = document.querySelector('.texto-bajo');
+            var fontSize = calculatedWidth / 10;
+
+            texto.style.fontSize = fontSize + 'px';
+            texto.style.width = calculatedWidth + 'px';
+            textoBajo.style.fontSize = fontSize + 'px';
+            textoBajo.style.width = calculatedWidth + 'px';
+        }
+
+        // Control de sliders
+        document.querySelectorAll('.boton-joya').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remover clase active de todos los botones
+                document.querySelectorAll('.boton-joya').forEach(btn => btn.classList.remove('active'));
+                // Añadir clase active al botón clickeado
+                this.classList.add('active');
+                
+                // Ocultar todos los sliders
+                document.querySelectorAll('.sliders-container').forEach(container => {
+                    container.classList.remove('active');
+                });
+                
+                // Mostrar sliders correspondientes
+                const type = this.dataset.type;
+                document.getElementById(`${type}-sliders`).classList.add('active');
+            });
+        });
+
+        // Event listeners iniciales
+        window.addEventListener('load', ajustarTexto);
+        window.addEventListener('resize', ajustarTexto);
+    </script>
+
 </body>
 </html>
